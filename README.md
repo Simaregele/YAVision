@@ -1,4 +1,4 @@
-# импорт зависимостей происходит из файла credentials.py
+# Импорт зависимостей происходит из файла credentials.py
 
 ###Импорт `from credentials import FOLDER_ID, OAUTH_TOKEN, IMAGE_PATH`
 
