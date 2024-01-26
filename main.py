@@ -3,7 +3,7 @@ from requests import post
 import json
 import base64
 from credentials import FOLDER_ID, OAUTH_TOKEN, IMAGE_PATH
-from parse_dialog import group_words_by_line, group_data_by_x, build_dialogue, group_words_by_line_last
+from parse_dialog import group_words_by_line, group_data_by_x, build_dialogue
 
 
 # The function returns the IAM token for the Yandex account.
@@ -44,9 +44,7 @@ def main():
     json_data = json.loads(response_text)
     # Пример использования
     lines_dict = group_words_by_line(json_data)
-    lines_dict_last = group_words_by_line_last(json_data)
     # Группировка данных
-    print(lines_dict_last)
     groups = group_data_by_x(lines_dict, 10)
     # Построение диалога
     dialogue = build_dialogue(lines_dict, groups)
