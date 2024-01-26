@@ -3,8 +3,7 @@ from requests import post
 import json
 import base64
 from credentials import FOLDER_ID, OAUTH_TOKEN, IMAGE_PATH
-from parse_dialog import group_words_by_line, prepare_data, group_data_by_x, build_dialogue
-import numpy as np
+from parse_dialog import group_words_by_line, group_data_by_x, build_dialogue, group_words_by_line_last
 
 
 # The function returns the IAM token for the Yandex account.
@@ -37,29 +36,24 @@ def request_analyze(vision_url, iam_token, folder_id, image_data):
 def main():
     iam_url = 'https://iam.api.cloud.yandex.net/iam/v1/tokens'
     vision_url = 'https://vision.api.cloud.yandex.net/vision/v1/batchAnalyze'
-
     iam_token = get_iam_token(iam_url, OAUTH_TOKEN)
     with open(IMAGE_PATH, "rb") as f:
         image_data = base64.b64encode(f.read()).decode('utf-8')
     response_text = request_analyze(vision_url, iam_token, FOLDER_ID, image_data)
     # Преобразование JSON строки в объект Python
     json_data = json.loads(response_text)
-
-
     # Пример использования
-    lines_dict = group_words_by_line(json_data)  # Предполагаем, что lines_dict уже заполнен
+    lines_dict = group_words_by_line(json_data)
+    lines_dict_last = group_words_by_line_last(json_data)
     # Группировка данных
-    print(lines_dict)
-    prepared_data = prepare_data(lines_dict)
-
-    groups = group_data_by_x(prepared_data, 10)
-
+    print(lines_dict_last)
+    groups = group_data_by_x(lines_dict, 10)
     # Построение диалога
-    dialogue = build_dialogue(prepared_data, groups)
-
+    dialogue = build_dialogue(lines_dict, groups)
     # Вывод диалога
     for sender, message in dialogue:
         print(f"{sender}: {message}")
+
 
 if __name__ == '__main__':
     main()
